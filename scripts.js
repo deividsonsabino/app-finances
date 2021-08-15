@@ -9,13 +9,15 @@ const Modal = {
 
 const Storage = {
   get() {
-    return JSON.parse(localStorage.getItem("dev.finances:transactions")) || []
+    return JSON.parse(localStorage.getItem("dev.finances:transactions")) || [];
   },
   set(transactions) {
-    localStorage.setItem("dev.finances:transactions",JSON.stringify(transactions));
+    localStorage.setItem(
+      "dev.finances:transactions",
+      JSON.stringify(transactions)
+    );
   },
-}
-
+};
 
 const Transaction = {
   all: Storage.get(),
@@ -63,7 +65,7 @@ const DOM = {
   addTransaction(transaction, index) {
     const tr = document.createElement("tr");
     tr.innerHTML = DOM.innerHTMLTransactions(transaction, index);
-    tr.dataset.index = index
+    tr.dataset.index = index;
 
     DOM.transactionsContainer.appendChild(tr);
   },
@@ -104,7 +106,7 @@ const DOM = {
 
 const Utils = {
   formatAmount(value) {
-    value = Number(value) * 100;
+    value = Number(value.replace(/\,\./g, "")) * 100;
     return value;
   },
 
@@ -116,8 +118,8 @@ const Utils = {
   formatCurrency(value) {
     const signal = Number(value) < 0 ? "-" : "";
 
-    value = String(value).replace(/\,?\.?/g, "") * 100;
-
+    value = String(value).replace(/\D/g, "");
+    
     value = Number(value) / 100;
 
     value = value.toLocaleString("pt-BR", {
@@ -189,11 +191,11 @@ const Form = {
 
 const App = {
   init() {
-    Transaction.all.forEach((DOM.addTransaction));
+    Transaction.all.forEach(DOM.addTransaction);
 
     DOM.updateBalance();
 
-    Storage.set(Transaction.all)
+    Storage.set(Transaction.all);
   },
   reload() {
     DOM.clearTransactions();
